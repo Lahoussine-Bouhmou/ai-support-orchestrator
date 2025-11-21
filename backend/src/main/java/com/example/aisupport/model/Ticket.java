@@ -3,6 +3,9 @@ package com.example.aisupport.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.Instant;
 
 @Entity
 @Table(name = "tickets")
@@ -34,4 +37,10 @@ public class Ticket {
 
     @Lob
     private String suggestedReply;
+
+    @Enumerated(EnumType.STRING)
+    private TicketStatus status;   // NEW, VALIDATED, NEEDS_REVIEW
+
+    @CreationTimestamp
+    private Instant createdAt;     // rempli automatiquement
 }

@@ -1,20 +1,37 @@
 // src/components/TicketList.jsx
 import TicketCard from './TicketCard';
 
-export default function TicketList({ tickets, loading }) {
+export default function TicketList({ tickets, loading, filterStatus, onChangeStatus, onFilterChange }) {
+  const filtered = filterStatus && filterStatus !== 'ALL'
+    ? tickets.filter((t) => (t.status || 'NEW') === filterStatus)
+    : tickets;
+
   return (
     <div className="ticket-list">
       <div className="ticket-list-header">
         <h2>Tickets générés</h2>
-        {loading && <span className="loader">Chargement...</span>}
+
+        <div className="ticket-filters">
+          <label>
+            Statut :{' '}
+            <select value={filterStatus} onChange={(e) => onFilterChange(e.target.value)}>
+              <option value="ALL">Tous</option>
+              <option value="NEW">Nouveaux</option>
+              <option value="VALIDATED">Validés</option>
+              <option value="NEEDS_REVIEW">À corriger</option>
+            </select>
+          </label>
+
+          {loading && <span className="loader">Chargement...</span>}
+        </div>
       </div>
 
-      {tickets.length === 0 && !loading && (
-        <p>Aucun ticket pour le moment. Envoie un email pour commencer.</p>
+      {filtered.length === 0 && !loading && (
+        <p>Aucun ticket pour le filtre sélectionné.</p>
       )}
 
-      {tickets.map((ticket) => (
-        <TicketCard key={ticket.id} ticket={ticket} />
+      {filtered.map((ticket) => (
+        <TicketCard key={ticket.id} ticket={ticket} onChangeStatus={onChangeStatus} />
       ))}
     </div>
   );

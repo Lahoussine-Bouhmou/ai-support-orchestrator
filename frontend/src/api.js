@@ -29,3 +29,20 @@ export async function fetchTickets() {
 
   return response.json();
 }
+
+export async function updateTicketStatus(id, status) {
+  const response = await fetch(`${API_BASE}/emails/tickets/${id}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ status }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text().catch(() => '');
+    throw new Error(`Erreur API (${response.status}): ${text}`);
+  }
+
+  return response.json();
+}
